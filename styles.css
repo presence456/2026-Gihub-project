@@ -1,258 +1,274 @@
-:root {
-  color-scheme: light;
-  --color-page: #f4f6fb;
-  --color-card: #ffffff;
-  --color-text: #253047;
-  --color-muted: #8992a5;
-  --color-primary: #6257d9;
-  --color-primary-hover: #5146c6;
-  --color-border: #e8eaf1;
-  --color-completed: #a4aabc;
-  --color-danger: #d65b69;
-  --color-danger-hover: #b94452;
-  --shadow-card: 0 18px 50px rgba(37, 48, 71, 0.09);
-  --radius-card: 20px;
-  --radius-control: 12px;
-}
-
+/* ---------- 基本設定 ---------- */
 * {
   box-sizing: border-box;
 }
 
+/* 淺色(預設)配色 */
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-alt: #f4f5f7;
+  --text: #1f2328;
+  --text-muted: #656d76;
+  --border: #d0d7de;
+  --accent: #1f883d;
+  --accent-hover: #1a7f37;
+  --danger: #cf222e;
+  --danger-soft: rgba(207, 34, 46, 0.1);
+  --shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* 深色配色:兩種情況都要涵蓋 —— */
+/* (1) 使用者沒手動選過,跟隨作業系統設定 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-alt: #0d1117;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --border: #30363d;
+    --accent: #238636;
+    --accent-hover: #2ea043;
+    --danger: #f85149;
+    --danger-soft: rgba(248, 81, 73, 0.15);
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* (2) 使用者按了切換按鈕,手動選擇優先於系統設定 */
+:root[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface-alt: #0d1117;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --border: #30363d;
+  --accent: #238636;
+  --accent-hover: #2ea043;
+  --danger: #f85149;
+  --danger-soft: rgba(248, 81, 73, 0.15);
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
 body {
-  min-width: 320px;
-  min-height: 100vh;
   margin: 0;
-  padding: 64px 20px 40px;
-  background:
-    radial-gradient(ellipse at 50% 0, rgba(98, 87, 217, 0.1), transparent 42%),
-    var(--color-page);
-  color: var(--color-text);
-  font-family:
-    "Segoe UI", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+  padding: 24px 16px;
+  min-height: 100vh;
+  font-family: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-button,
-input {
-  font: inherit;
-}
-
-.todo-app {
+/* ---------- 版面容器(置中、RWD) ---------- */
+.app {
   width: 100%;
   max-width: 520px;
-  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .app-header {
-  margin-bottom: 28px;
-  text-align: center;
-}
-
-.eyebrow {
-  margin: 0 0 10px;
-  color: var(--color-primary);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(2rem, 8vw, 2.65rem);
-  letter-spacing: 0.04em;
+  font-size: 1.4rem;
 }
 
-.subtitle {
-  margin: 12px 0 0;
-  color: var(--color-muted);
-  font-size: 0.95rem;
+/* ---------- 深色模式切換按鈕 ---------- */
+.btn-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
 }
 
-.todo-card {
-  overflow: hidden;
-  border: 1px solid rgba(232, 234, 241, 0.8);
-  border-radius: var(--radius-card);
-  background: var(--color-card);
-  box-shadow: var(--shadow-card);
+.btn-theme:hover {
+  border-color: var(--accent);
 }
 
+/* ---------- 新增表單 ---------- */
 .todo-form {
   display: flex;
-  gap: 10px;
-  padding: 22px;
-  border-bottom: 1px solid var(--color-border);
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.todo-form input {
-  min-width: 0;
+.todo-input {
   flex: 1;
-  padding: 13px 15px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-control);
-  outline: none;
-  background: #fbfbfd;
-  color: var(--color-text);
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+  min-width: 0;
+  padding: 10px 12px;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
-.todo-form input::placeholder {
-  color: #a8afbd;
+.todo-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
-.todo-form input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(98, 87, 217, 0.13);
-}
-
-.add-button {
-  min-width: 76px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: var(--radius-control);
-  background: var(--color-primary);
-  color: #ffffff;
+.btn-add {
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 700;
-  transition:
-    background 160ms ease,
-    transform 160ms ease;
 }
 
-.add-button:hover {
-  background: var(--color-primary-hover);
+.btn-add:hover {
+  background: var(--accent-hover);
 }
 
-.add-button:active {
-  transform: scale(0.97);
+/* ---------- 篩選按鈕 ---------- */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
+.btn-filter {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-filter:hover {
+  color: var(--text);
+}
+
+.btn-filter.is-active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---------- 清單 ---------- */
 .todo-list {
-  display: grid;
-  gap: 2px;
-  margin: 0;
-  padding: 8px 22px;
   list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .todo-item {
   display: flex;
-  min-height: 60px;
   align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid var(--color-border);
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
-.todo-item:last-child {
-  border-bottom: 0;
-}
-
-.todo-checkbox {
-  width: 19px;
-  height: 19px;
-  flex: 0 0 auto;
-  margin: 0;
-  accent-color: var(--color-primary);
+.todo-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
   cursor: pointer;
+  accent-color: var(--accent);
 }
 
 .todo-text {
-  min-width: 0;
   flex: 1;
-  overflow-wrap: anywhere;
-  line-height: 1.5;
+  min-width: 0;
+  word-break: break-word;
 }
 
-.todo-item.is-completed .todo-text {
-  color: var(--color-completed);
+/* 已完成的樣式:刪除線 + 淡化 */
+.todo-item.completed .todo-text {
   text-decoration: line-through;
+  color: var(--text-muted);
 }
 
-.delete-button {
-  flex: 0 0 auto;
-  padding: 7px 9px;
-  border: 0;
-  border-radius: 8px;
+.btn-delete {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--danger);
   background: transparent;
-  color: var(--color-muted);
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition:
-    background 160ms ease,
-    color 160ms ease;
 }
 
-.delete-button:hover {
-  background: #fff0f1;
-  color: var(--color-danger-hover);
+.btn-delete:hover {
+  background: var(--danger-soft);
 }
 
-.empty-message {
-  margin: 0;
-  padding: 36px 20px;
-  color: var(--color-muted);
+/* ---------- 空狀態與頁尾 ---------- */
+.empty-state {
+  margin: 16px 0 0;
   text-align: center;
+  color: var(--text-muted);
 }
 
-.empty-message[hidden] {
-  display: none;
-}
-
-.list-footer {
-  padding: 15px 22px;
-  border-top: 1px solid var(--color-border);
-  color: var(--color-muted);
-  font-size: 0.88rem;
-}
-
-.app-note {
-  margin: 18px 0 0;
-  color: var(--color-muted);
-  font-size: 0.8rem;
+.app-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
   text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
-.visually-hidden {
+/* ---------- 無障礙:僅供螢幕閱讀器 ---------- */
+.sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  clip-path: inset(50%);
+  border: 0;
 }
 
-@media (max-width: 480px) {
-  body {
-    padding: 42px 16px 28px;
-  }
-
-  .app-header {
-    margin-bottom: 22px;
-  }
-
-  .todo-form {
-    gap: 8px;
+/* ---------- 小螢幕微調 ---------- */
+@media (max-width: 420px) {
+  .app {
     padding: 16px;
   }
 
-  .todo-form input {
-    padding: 12px;
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .add-button {
-    min-width: 66px;
-    padding: 0 13px;
-  }
-
-  .todo-list {
-    padding-right: 16px;
-    padding-left: 16px;
-  }
-
-  .list-footer {
-    padding-right: 16px;
-    padding-left: 16px;
+  .todo-form {
+    flex-direction: column;
   }
 }
